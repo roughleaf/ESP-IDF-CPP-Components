@@ -1,9 +1,4 @@
-#include <memory>
-
 #include "CPPI2C/cppi2c.h"
-#include <stdio.h>
-
-#include "esp_log.h"
 
 namespace CPPI2C
 {
@@ -54,6 +49,7 @@ namespace CPPI2C
     esp_err_t I2c::WriteRegister(uint8_t dev_addr, uint8_t reg_addr, uint8_t txData)
     {
         const uint8_t txBuf[2] {reg_addr, txData};
+
         return i2c_master_write_to_device(_port, dev_addr, txBuf, 2, pdMS_TO_TICKS(1000));
     }
 
@@ -89,14 +85,14 @@ uint8_t I2c::ReadRegister(uint8_t dev_addr, uint8_t reg_addr)
 
     i2c_cmd_handle_t _handle = i2c_cmd_link_create();
 
-    i2c_master_start(_handle);
-    i2c_master_write_byte(_handle, (dev_addr << 1) | I2C_MASTER_WRITE, true); // Write Devive Address write mode
-    i2c_master_write_byte(_handle, reg_addr, true);                           // Write Register Address
-    i2c_master_start(_handle);                                                // Repeated start bit
-    i2c_master_write_byte(_handle, (dev_addr << 1) | I2C_MASTER_READ, true);  // Write Devive Address read mode
-    i2c_master_read_byte(_handle, &rxBuf, I2C_MASTER_LAST_NACK);
-    i2c_master_stop(_handle);
-    i2c_master_cmd_begin(_port, _handle, pdMS_TO_TICKS(1000));
+    err |= i2c_master_start(_handle);
+    err |= i2c_master_write_byte(_handle, (dev_addr << 1) | I2C_MASTER_WRITE, true); // Write Devive Address write mode
+    err |= i2c_master_write_byte(_handle, reg_addr, true);                           // Write Register Address
+    err |= i2c_master_start(_handle);                                                // Repeated start bit
+    err |= i2c_master_write_byte(_handle, (dev_addr << 1) | I2C_MASTER_READ, true);  // Write Devive Address read mode
+    err |= i2c_master_read_byte(_handle, &rxBuf, I2C_MASTER_LAST_NACK);
+    err |= i2c_master_stop(_handle);
+    err |= i2c_master_cmd_begin(_port, _handle, pdMS_TO_TICKS(1000));
     i2c_cmd_link_delete(_handle);
 
     return rxBuf;
