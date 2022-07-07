@@ -1,13 +1,17 @@
 #pragma once
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-
 #include "bme280_common/bme280_common.h"
 #include "CPPSPI/cppspi.h"
 
 namespace CPPBME280
 {
+    constexpr static uint8_t MODE = 0;
+    constexpr static uint8_t ADDR_BITS = 7;
+    constexpr static uint8_t CMD_BITS = 1;
+
+    constexpr static uint8_t SPI_WRITE = 0;
+    constexpr static uint8_t SPI_READ = 1;
+
     class BME280SPI : public BME280
     {
     private:
@@ -23,5 +27,3 @@ namespace CPPBME280
         esp_err_t InitSpi(CPPSPI::Spi *i_spi, const int ss);
     }; // namespace CPPBME280
 } // namespace CPPBME280
-
-//void InitSPI();

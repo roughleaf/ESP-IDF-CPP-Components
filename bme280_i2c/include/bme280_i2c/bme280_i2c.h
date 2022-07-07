@@ -1,8 +1,5 @@
 #pragma once
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-
 #include "bme280_common/bme280_common.h"
 #include "CPPI2C/cppi2c.h"
 
