@@ -50,7 +50,7 @@ namespace CPPSPI
         return status;
     }
 
-    esp_err_t Spi::RegisterDevice(const uint8_t mode, const int ss, const int addr_length, const int command_length, const int clock_speed_devider)
+    esp_err_t Spi::RegisterDevice(const uint8_t mode, const int ss, const int addr_length, const int command_length, const int bus_speed)
     {
         esp_err_t status = ESP_OK;
 
@@ -58,8 +58,8 @@ namespace CPPSPI
         _spi_interface_cfg.command_bits = command_length; 
         _spi_interface_cfg.address_bits = addr_length;
         _spi_interface_cfg.mode = mode;
-        _spi_interface_cfg.clock_speed_hz = clock_speed_devider; // 80MHz/10 = 8MHz SPI speed
-        _spi_interface_cfg.spics_io_num = ss; // IO pin 5 is my chip select
+        _spi_interface_cfg.clock_speed_hz = bus_speed; 
+        _spi_interface_cfg.spics_io_num = ss;
         _spi_interface_cfg.queue_size = 5;
 
         status |= spi_bus_add_device(_spi_peripheral, &_spi_interface_cfg, &_handle);
